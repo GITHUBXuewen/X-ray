@@ -1,0 +1,67 @@
+PySpark机器学习（2）——GBDT  http://www.voidcn.com/article/p-yxofpwpk-brp.html          https://blog.csdn.net/FlySky1991/article/details/80080673
+PySpark机器学习（1）——随机森林  http://www.voidcn.com/article/p-yrllmfkp-brp.html
+
+
+一、pyspark.ml.feature特征处理
+ 	方法	描述	功能
+连续特征离散化	
+Binarizer	将连续值划分为二元离散数值	连续特征离散化
+Bucketizer	将连续值划分为多元离散数值	连续特征离散化
+QuantileDiscretizer	分位数离散化，将连续型特征转换为分级类别特征，每个类别的元素个数大致相等	连续特征离散化
+特征选择	
+ChiSqSelector	根据卡方检验，选取类别标签主要依赖的特征	特征选择
+PCA	主成分分析，找出特征中最重要的特征，进行降维	特征提取、数据降维
+VectorSlicer	从原来的特征向量中切割一部分，形成新的特征向量	特征选择
+特征归一化	
+MaxAbsScaler	每一列特征值除以列向量上的最大值的绝对值，特征值缩放到[-1,1]	列数据标准化-最大值归一化
+MinMaxScaler	列特征数据归一化到[0,1]	列数据标准化-最大值最小值归一化
+StandardScaler	特征列向量标准化，均值为0，方差为1	列数据标准化-单位标准差
+Normalizer	行向量的范数变换为单位范数	行向量正则化
+文本特征提取	
+StringIndexer	将字符串索引化	文本特征转化为词频向量
+CountVectorizer	从文本文档中提取词汇，并统计词频	文本特征转化为词频向量
+HashingTF	从文本文档中提取词汇，哈希到固定长度的特征向量，并统计词频	文本词向量转化为哈希词频向量
+IDF	逆向文件频率，计算单词在文档中出现的频率	TF-IDF文本特征提取的常用方法，评估字词对一个文本的重要程度
+Word2Vec	将每个词语映射到一个固定大小的向量	单词转化为向量
+文本特征
+NGram	将文本词向量，n个相邻词组合成字符串	文本词向量组合
+StopWordsRemover	将字符串中的停用字删除	文本删除停用字
+Tokenizer	分词器，将字符串转化为小写字符，根据空格拆分	文本拆分
+RegexTokenizer	基于正则表达式拆分输入的文本	文本拆分
+特征向量	
+OneHotEncoder	将某列根据其值转变成多列	对分类型特征进行独热编码
+PolynomialExpansion	n维原始特征组合扩展到多项式空间	特征多项式扩展
+ElementwiseProduct	对向量乘以权向量，得到新向量	向量特征放缩
+VectorAssembler	将多列特征转化为单列的向量列	特征向量合并
+
+二、pyspark.ml模型
+ 	模型	描述
+Classification	
+LogisticRegression	基准分类器，计算样本属于某一类别的概率
+NaiveBayes	根据条件概率计算样本属于某一类别的概率，能处理二分类及多分类问题
+DecisionTreeClassifier	决策树分类器。
+参数：maxDepth,树的最大深度；minInstancePerNode,节点可以继续拆分左右子树的样本最小值；maxBins,连续特征可以离散化的最大数目；impurity，计算信息增益的方法。
+GBTClassifier	集成模型，解决二分类问题，能处理连续和离散特征。
+RandomForestClassifier	集成模型，解决二分类及多分类问题。
+MultilayerPerceptronClassifier	多层感知机分类器，至少三个全连接层，输入层及中间层使用sigmoid激活函数，输出层使用softmax函数分类。解决二分类及多分类问题。
+OneVsRest	将多分类问题转化为二分类问题，k个类别训练k个模型。
+Regression	
+DecisionTreeRegressor	决策树回归模型，与决策树分类器区别是样本标签是连续值
+RandomForestRegressor	随机森林回归模型，标签是连续值
+GBTRegressor	GBDT回归模型，样本标签是连续值
+LinearRegression	线性回归，误差项呈正态分布
+GeneralizedLinearRegression	广义线性回归模型，是拥有不同高斯核函数的线性模型。误差项呈高斯分布
+IsotonicRegression	针对有序数据集的回归模型
+Clustering	
+BisectingKMeans	Kmeans和分层聚类的组合
+KMeans	KMeans聚类
+GaussianMixture	采用高斯分布对数据集聚类
+LDA	获取文本文档的主题模型
+
+三、pyspark.ml.tuning参数遍历
+
+对模型参数进行网络搜索遍历，选择最优模型。对模型参数进行遍历的原则：对影响较大的参数先行遍历。
+
+pyspark.ml.tuning 提供两种方式对参数遍历：
+
+CrossValidator，K折交叉验证，将数据集分成K份，选择一份作为测试集，进行K次训练，取评估指标的平均值；TrainValidationSplit，训练集和验证集划分验证，模型只训练一次。
