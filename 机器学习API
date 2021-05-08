@@ -1,0 +1,60 @@
+分类算法
+ 线性判别分析（LDA）>>> from sklearn.discriminant_analysis import LinearDiscriminantAnalysis >>> lda = LinearDiscriminantAnalysis(solver="svd", store_covariance=True)
+二次判别分析（QDA）>>> from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis>>> qda = QuadraticDiscriminantAnalysis(store_covariances=True)
+支持向量机（SVM）>>> from sklearn import svm>>> clf = svm.SVC()
+Knn算法>>> from sklearn import neighbors>>> clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
+神经网络（nn）>>> from sklearn.neural_network import MLPClassifier>>> clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+朴素贝叶斯算法（Naive Bayes）>>> from sklearn.naive_bayes import GaussianNB>>> gnb = GaussianNB()
+决策树算法（decision tree）>>> from sklearn import tree>>> clf = tree.DecisionTreeClassifier()
+集成算法（Ensemble methods）
+Bagging>>> from sklearn.ensemble import BaggingClassifier>>> from sklearn.neighbors import KNeighborsClassifier>>> bagging = BaggingClassifier(KNeighborsClassifier(),…,max_samples=0.5, max_features=0.5)
+随机森林（Random Forest）>>> from sklearn.ensemble import RandomForestClassifier>>> clf = RandomForestClassifier(n_estimators=10)
+AdaBoost>>> from sklearn.ensemble import AdaBoostClassifier>>> clf = AdaBoostClassifier(n_estimators=100)
+GBDT（Gradient Tree Boosting）>>from sklearn.ensemble import GradientBoostingClassifier>>clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0,…, max_depth=1, random_state=0).fit(X_train, y_train)
+回归算法
+最小二乘回归（OLS）>>> from sklearn import linear_model>>> reg = linear_model.LinearRegression()
+岭回归（Ridge Regression）>>> from sklearn import linear_model>>> reg = linear_model.Ridge (alpha = .5)
+核岭回归（Kernel ridge regression）>>> from sklearn.kernel_ridge import KernelRidge>>> KernelRidge(kernel='rbf', alpha=0.1, gamma=10)
+支持向量机回归（SVR）>>> from sklearn import svm>>> clf = svm.SVR()
+套索回归（Lasso）>>> from sklearn import linear_model>>> reg = linear_model.Lasso(alpha = 0.1)
+弹性网络回归（Elastic Net）>>> from sklearn.linear_model import ElasticNet>>> regr = ElasticNet(random_state=0)
+贝叶斯回归（Bayesian Regression）>>> from sklearn import linear_model>>> reg = linear_model.BayesianRidge()
+逻辑回归（Logistic regression）>>> from sklearn.linear_model import LogisticRegression >>> clf_l1_LR = LogisticRegression(C=C, penalty='l1', tol=0.01)>>> clf_l2_LR = LogisticRegression(C=C, penalty='l2', tol=0.01)
+稳健回归（Robustness regression）>>> from sklearn import linear_model>>> ransac = linear_model.RANSACRegressor()
+多项式回归（Polynomial regression）>>> from sklearn.preprocessing import PolynomialFeatures>>> poly = PolynomialFeatures(degree=2)>>> poly.fit_transform(X)
+高斯过程回归（Gaussian Process Regression）
+偏最小二乘回归（PLS）>>> from sklearn.cross_decomposition import PLSCanonical>>> PLSCanonical(algorithm='nipals', copy=True, max_iter=500, n_components=2,scale=True, tol=1e-06)
+典型相关分析（CCA）>>> from sklearn.cross_decomposition import CCA>> cca = CCA(n_components=2)
+聚类算法
+Knn算法>>> from sklearn.neighbors import NearestNeighbors>>> nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree').fit(X)
+Kmeans算法>>> from sklearn.cluster import KMeans>>> kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
+层次聚类（Hierarchical clustering支持多种距离>>> from sklearn.cluster import AgglomerativeClustering>>> model = AgglomerativeClustering(linkage=linkage,…, connectivity=connectivity, n_clusters=n_clusters)
+降维算法
+主成分方法（PCA）>>> from sklearn.decomposition import PCA>>> pca = PCA(n_components=2)
+核函主成分（kernal pca）>>> from sklearn.decomposition import KernelPCA>>> kpca = KernelPCA(kernel="rbf", fit_inverse_transform=True, gamma=10)
+因子分析（Factor Analysis）>>> from sklearn.decomposition import FactorAnalysis>>> fa = FactorAnalysis()
+文本挖掘算法
+主题生成模型（Latent Dirichlet Allocation）>>> from sklearn.decomposition import NMF, LatentDirichletAllocation
+TF-IDF分词提取关键字：from sklearn.feature_extraction.text import CountVectorizer  或  jieba包的自动提取jieba.analyse.extract_tags(content,topK=n)
+潜在语义分析（latent semantic analysis）
+模型优化不具体列出函数，只说明提供的功能
+特征选择 = 方差选择法from sklearn.feature_selection import VarianceThreshold \相关系数法SelectKBest   f_regression \递归特征消除法 RFE LinearRegression\模型选择法 SelectFromModel\
+随机梯度方法
+交叉验证
+参数调优 gridsearch
+模型评估：支持准确率、召回率、AUC等计算，ROC,损失函数等作图
+数据预处理
+标准化  标准化z-score  sklearn.preprocessing.scale(X) 、最小-最大规.StandardScaler()\规范化（Normalization）归一化normalize  \
+异常值处理  特征中含异常值时  sklearn.preprocessing.robust_scale 
+非线性转换   其实涉及到特征工程了，多项式特征/交叉特征。poly = sklearn.preprocessing.PolynomialFeatures(2)   poly.fit_transform(X)
+二值化 特征二值化（Binarization）sklearn.preprocessing.Binarizer(threshold=1.1) 标签二值化（Label binarization）sklearn.preprocessing.LabelBinarizer()  
+独热编码（one-hot）类别特征编码preprocessing.OneHotEncoder()enc = preprocessing.OneHotEncoder()---enc.fit([[0, 0, 3], [1, 1, 0], [0, 2, 1], [1, 0, 2]])--enc.transform([[0, 1, 3]]).toarray()
+                   标签编码（Label encoding）le = sklearn.preprocessing.LabelEncoder() le.fit([1, 2, 2, 6]) le.transform([1, 1, 2, 6])  #array([0, 0, 1, 2]) 
+#非数值型转化为数值型le.fit(["paris", "paris", "tokyo", "amsterdam"])le.transform(["tokyo", "tokyo", "paris"])  #array([2, 2, 1])
+缺失值插补：支持均值、中位数、众数、特定值插补、多重插补
+衍生变量生成
+可能不支持的算法（也可能是我没找到）
+极限提升树算法（xgboost） 有专门的xgb模块支持
+深度学习相关算法RNN,DNN,NN,LSTM等 
+有专门的深度学习模块入tf，keras等支持
+
